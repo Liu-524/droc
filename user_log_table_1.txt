@@ -1,0 +1,43 @@
+****Step name: pick up box****
+y
+****Step name: pick up toy****
+robot_a is mounted. Let a put things in the box.
+****Step name: put box on table near robot_a****
+robot_a is holding the box. Let it do the job.
+****Step name: open the box****
+the box is not lidded, just put the stuff in.
+****Step name: wait****
+mounted robot_a is more efficient. Let it put the stuff in box.
+****Step name: pick up toy****
+it needs to put down the box before picking other things
+****Step name: put box on table****
+y
+****Step name: wait****
+y
+****Step name: pick up toy****
+y
+****Step name: wait****
+y
+****Step name: put toy in box****
+y
+****Step name: wait****
+y
+****Step name: pick up doll****
+y
+****Step name: wait****
+y
+****Step name: put doll in box****
+y
+****Step name: wait****
+y
+****Step name: pick up apple****
+You can leave the apple on table.
+put the apple down. leave it on table.
+****Step name: put apple down****
+y
+****Step name: wait****
+robot_b is mobile. Let it take the box away.
+****Step name: wait****
+y
+****Step name: carry the box****
+y
