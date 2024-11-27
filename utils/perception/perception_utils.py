@@ -48,6 +48,16 @@ def get_considered_classes():
     elif TASK == 'lego':
         considered_classes = [["white drawer", "white drawer handle"], ["red block"], ["yellow block"], ["blue block"]]
         other_classes = [["robot arm"], ["table cloth"], ["work surface"], ["tripod"]]
+    elif TASK == 'bottle':
+        considered_classes = [['table', 'dinner table'], ['fridge'], ['wine bottle', 'wine'], ['glass', 'glass cup'], ['red cup']]
+        other_classes = [['floor'], ['light'], ['robot_arm']]
+    elif TASK == 'arm':
+        considered_classes = [['table', 'dinner table'], ['desk'], ['pen'], ['paper'], ['apple'], ['knife', 'chef knife'], ['cutboard', 'board']]
+        other_classes = [['floor'], ['light'], ['robot_arm']]
+    elif TASK == 'table':
+        considered_classes = [['table', 'dinner table'], ['trash'], ['trash bin', 'bin'], ['box'], ['plate'], ['cupboard'], ['silverware']]
+        other_classes = [['floor'], ['light'], ['robot_arm']]
+        
     else:
         raise NotImplementedError
     return considered_classes, other_classes
@@ -376,7 +386,7 @@ def calculate_pos_scale():
     if REAL_ROBOT:
         whole_prompt = prompt_get_pos_scale + '\n\n' + 'Bounding box: ' + str(queried_obj.bounding_box)
     else:
-        whole_prompt = prompt_get_pos_scale + '\n\n' + 'Bounding box: (1, 8, 3)'
+        whole_prompt = prompt_get_pos_scale + '\n\n' + 'Bounding box: (1, 1, 1)'
     response = query_LLM(whole_prompt, ["Bounding box:"], "cache/llm_get_pos_scale.pkl")
     response_json = response.text
     mapping_dict = json.loads(response_json)

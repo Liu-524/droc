@@ -1,7 +1,7 @@
 import numpy as np
 from perception_utils import detect, sort_from_high_to_low
 from geometric_utils import calculate_centroid, calculate_major_axis, calculate_minor_axis, calculate_tail_point
-
+### NOTE: Make sure to call sort_from_high_to_low
 # Query: the centroid and minor axis of "top black hat"
 black_hats = detect('black hat')
 black_hats = sort_from_high_to_low(black_hats, key='z')
@@ -23,3 +23,5 @@ shelves = sort_from_high_to_low(shelves, key='z')
 middle_shelf = shelves[len(shelves)//2]
 middle_shelf.rotation = calculate_major_axis(middle_shelf.pcd)
 ret_val = middle_shelf
+
+# Always sort before processing the detections.

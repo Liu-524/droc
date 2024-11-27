@@ -1,5 +1,6 @@
 import numpy as np
-import os, pickle, atexit, argparse, json, re
+import os, pickle, atexit, argparse, re
+import json5 as json
 import warnings
 from collections import defaultdict
 from utils.modulable_prompt import modulable_prompt
@@ -27,7 +28,7 @@ prompt_saveinfo = read_py('prompts/ll_distill.txt')
 prompt_get_task_feature_file = 'prompts/get_task_feature.txt'
 prompt_get_constraint_feature = read_py('prompts/get_constraint_feature.txt')
 rel_pos, rel_ori, gripper_opened = None, None, False
-
+NUM_RETRIES = 3
 # ------------------------------------------ Primitives ------------------------------------------
 
 def get_current_state():
@@ -157,25 +158,38 @@ def main(args):
 
     # Infinite outmost loop
     while True:
-
+        instance_id = int(input(f"Current task:{args.task}, put the id:"))
+        use_distilled = input("Use distilled knowledge? (y/n)").strip()
         li = input('\n\n\n' + "I'm ready to take instruction." + '\n' + 'Input your instruction:')
 
         # Get initial objects and their states
         initialize_detection(first=True, load_image=args.load_image)
-        obj_state = get_initial_state()
+        # obj_state = get_initial_state()
+        with open(f'./cache/task_preset/{args.task}_{instance_id}.txt', 'r') as f:
+            obj_state = f.read() 
         obj_dict = get_objs()
         print(obj_state)
 
         # Retrieve plan-related knowledge and add it to the prompt
         plan_related_info, image_features = retrieve_plan_info(li)
         prompt_plan_instance.set_object_state(obj_state)
-        prompt_plan_instance.add_constraints(plan_related_info)
+        if use_distilled == 'y':
+            prompt_plan_instance.add_constraints(plan_related_info)
+        else:
+            pass
+
 
         # Generate initial plans (which could only be wrong in not grounding objects)
         prompt_plan = prompt_plan_instance.get_prompt()
         whole_prompt = prompt_plan + '\n' + '\n' + f"Instruction: {li}" + "\n"
-        response = query_LLM(whole_prompt, ["Instruction:"], "cache/llm_response_planning_high.pkl")
-        raw_code_step = format_plan(response)
+        try:
+            for i in range(NUM_RETRIES):
+                response = query_LLM(whole_prompt, ["Instruction:"], "cache/llm_response_planning_high.pkl")
+                raw_code_step = format_plan(response)
+                break
+        except:
+            print("GPT ERRORRRRRRRR")
+            pass
         print('***raw plan***')
         print(raw_code_step)
 
@@ -196,73 +210,92 @@ def main(args):
                 plan_features = {}
 
                 # Loop for executing each sub-step
-                for num, step_name in code_step.items():
-                    parsed_step_name = step_name.lower()[:-1] if step_name[-1] == '.' else step_name.lower()
-                    add_to_log("****Step name: " + parsed_step_name + '****', file_path=USER_LOG)
-                    add_to_log(f"I am performing the task: {parsed_step_name}.", also_print=True)
-                    use_interrupted_code, gripper_opened, corr_rounds = False, False, 0
-                    locals = defaultdict(dict)
-                    initialize_detection()
+                for num, comp_step_name in code_step.items():
+                    waits = []
+                    for robot, step_name in comp_step_name.items():
+                        if step_name.lower() == "wait" or step_name.lower() == "wait.":
+                            waits.append(robot)
+                    for robot, step_name in comp_step_name.items():
+                        parsed_step_name = step_name.lower()[:-1] if step_name[-1] == '.' else step_name.lower()
+                        add_to_log("****Step name: " + parsed_step_name + '****', file_path=USER_LOG)
+                        add_to_log(f"{robot} is performing the task: {parsed_step_name}.", also_print=True)
+                        if len(waits) > 0:
+                            add_to_log(f"{', '.join(waits)} waiting for this task to complete...", also_print=True)
+                        else:
+                            add_to_log("All robots are busy on their tasks.", also_print=True)
+                        # if parsed_step_name == 'wait':
+                        #     continue
+                        use_interrupted_code, gripper_opened, corr_rounds = False, False, 0
+                        locals = defaultdict(dict)
+                        initialize_detection()
 
-                    # Retrieve relavant task info and generate code
-                    task_feature = task_features[int(num)-1]
-                    if task_feature is not None:
-                        set_saved_detected_obj(step_name, task_feature)
-                    task_related_knowledge, localss = retrieve_task_info(step_name)
-                    prompt_codepolicy = prompt_codepolicy_instance.get_prompt()
-                    whole_prompt = prompt_codepolicy + '\n' + '\n' + f"# Task: {step_name}" + "\n" + task_related_knowledge + "\n"
-                    response = query_LLM(whole_prompt, ["# Task:", "# Outcome:"], "cache/llm_response_planning_low.pkl")
-                    _, code_as_policies = format_code(response)
+                        # Retrieve relavant task info and generate code
+                        task_feature = task_features[int(num)-1]
+                        if task_feature is not None:
+                            set_saved_detected_obj(step_name, task_feature)
+                        localss = {}
+                        # task_related_knowledge, localss = retrieve_task_info(step_name)
+                        # prompt_codepolicy = prompt_codepolicy_instance.get_prompt()
+                        # whole_prompt = prompt_codepolicy + '\n' + '\n' + f"# Task: {step_name}" + "\n" + task_related_knowledge + "\n"
+                        # response = query_LLM(whole_prompt, ["# Task:", "# Outcome:"], "cache/llm_response_planning_low.pkl")
+                        # _, code_as_policies = format_code(response)
+                        code_as_policies = "move_gripper_to_pose(moveup_pos, current_ori)"
+                        step_name = robot+ ": " + step_name
+                        tmp = load_file(HISTORY_TMP_PATH)
+                        tmp[li][step_name] = {}
+                        tmp[li][step_name]['code response 0'] = "No code for dry-run"
+                        pickle.dump(tmp, open(HISTORY_TMP_PATH, "wb"))
 
-                    # Add info to history temporary file for later interaction history retrieval
-                    tmp[li][step_name] = {}
-                    tmp[li][step_name]['code response 0'] = code_as_policies
-                    add_to_log('-'*80 + '\n' + '*whole prompt*' + '\n' + whole_prompt)
-                    add_to_log(f"# Task: {step_name}" + "\n" + task_related_knowledge + "\n" + '-'*80)
-                    add_to_log('-'*80 + '\n' + '*original code*' + '\n' + code_as_policies + '\n' + '-'*80)
-                    pickle.dump(tmp, open(HISTORY_TMP_PATH, "wb"))
+                        # Add info to history temporary file for later interaction history retrieval
+                        # tmp[li][step_name] = {}
+                        # tmp[li][step_name]['code response 0'] = code_as_policies
+                        # add_to_log('-'*80 + '\n' + '*whole prompt*' + '\n' + whole_prompt)
+                        # add_to_log(f"# Task: {step_name}" + "\n" + task_related_knowledge + "\n" + '-'*80)
+                        # add_to_log('-'*80 + '\n' + '*original code*' + '\n' + code_as_policies + '\n' + '-'*80)
+                        # pickle.dump(tmp, open(HISTORY_TMP_PATH, "wb"))
 
-                    # Main loop for code execution, correction and code regeneration
-                    while True:
-                        try:
-                            add_to_log('-'*80 + '\n' + code_as_policies + '\n' + '-'*80, also_print=True)
-                            exec(code_as_policies, globals(), localss)
-                            _break, corr_rounds, code_as_policies, use_interrupted_code = no_exception_handler(localss, locals, corr_rounds, li, step_name, failure_reasoning, use_interrupted_code, code_as_policies)
-                            if _break:
-                                break
-                        except InterruptedByHuman:
-                            _break = interruption_handler(localss, locals, corr_rounds, li, step_name, code_as_policies)
-                            if _break:
-                                break
-                            code_as_policies, corr_rounds = failure_reasoning(step_name, li, corr_rounds)
-                        except RobotError:
-                            _break = robot_error_handler(localss, locals, corr_rounds, li, step_name, code_as_policies)
-                            if _break:
-                                break
-                            code_as_policies, corr_rounds = failure_reasoning(step_name, li, corr_rounds)
-                        except GraspError:
-                            open_gripper(width=1)
-                            _break = grasp_error_handler(localss, locals, corr_rounds, li, step_name, code_as_policies)
-                            if _break:
-                                break
-                            code_as_policies, corr_rounds = failure_reasoning(step_name, li, corr_rounds)
-                        except WrongDetection:
-                            code_as_policies = detection_error_handler(localss, locals, corr_rounds, li, step_name, code_as_policies)
-                        except PlanningError as pe:
-                            raise PlanningError(pe)
-                        except Exception as e:
-                            print(e)
-                            _break = other_exception_handler(localss, locals, corr_rounds, li, step_name)
-                            if _break:
-                                break
-                            code_as_policies, corr_rounds = failure_reasoning(step_name, li, corr_rounds)
-                    add_to_log(f'********************Success! "{parsed_step_name}" is fulfilled !!!!!********************', also_print=True)
-                    print('# of corrections: ',corr_rounds)
-                    save_task_info(locals, step_name, corr_rounds, li)
-                    _, task_feature, _ = get_detected_feature()
-                    plan_features[parsed_step_name] = task_feature
-                    obj_state = update_object_state(obj_state, parsed_step_name)
-                    print(obj_state)
+                        # Main loop for code execution, correction and code regeneration
+                        while True:
+                            try:
+                                # add_to_log('-'*80 + '\n' + code_as_policies + '\n' + '-'*80, also_print=True)
+                                # exec(code_as_policies, globals(), localss)
+                                policy.move_to_pos(0,0)
+                                _break, corr_rounds, code_as_policies, use_interrupted_code = no_exception_handler(localss, locals, corr_rounds, li, step_name, failure_reasoning, use_interrupted_code, code_as_policies)
+                                if _break:
+                                    break
+                            except InterruptedByHuman:
+                                _break = interruption_handler(localss, locals, corr_rounds, li, step_name, code_as_policies)
+                                if _break:
+                                    break
+                                code_as_policies, corr_rounds = failure_reasoning(step_name, li, corr_rounds)
+                            except RobotError:
+                                _break = robot_error_handler(localss, locals, corr_rounds, li, step_name, code_as_policies)
+                                if _break:
+                                    break
+                                code_as_policies, corr_rounds = failure_reasoning(step_name, li, corr_rounds)
+                            except GraspError:
+                                open_gripper(width=1)
+                                _break = grasp_error_handler(localss, locals, corr_rounds, li, step_name, code_as_policies)
+                                if _break:
+                                    break
+                                code_as_policies, corr_rounds = failure_reasoning(step_name, li, corr_rounds)
+                            except WrongDetection:
+                                code_as_policies = detection_error_handler(localss, locals, corr_rounds, li, step_name, code_as_policies)
+                            except PlanningError as pe:
+                                raise PlanningError(pe)
+                            except Exception as e:
+                                print(e)
+                                _break = other_exception_handler(localss, locals, corr_rounds, li, step_name)
+                                if _break:
+                                    break
+                                code_as_policies, corr_rounds = failure_reasoning(step_name, li, corr_rounds)
+                        add_to_log(f'********************Success! "{parsed_step_name}" is fulfilled !!!!!********************', also_print=True)
+                        print('# of corrections: ',corr_rounds)
+                        save_task_info(locals, step_name, corr_rounds, li)
+                        _, task_feature, _ = get_detected_feature()
+                        plan_features[parsed_step_name] = task_feature
+                        obj_state = update_object_state(obj_state, parsed_step_name)
+                        print(obj_state)
                 plan_success = True
                 delete_file(HISTORY_TMP_PATH)
             except PlanningError:
@@ -337,7 +370,7 @@ def retrieve_plan_info(li):
             all_constraints_list = [v for _,v in all_constraints_dict.items()]
             all_constraints_str = ''
             for k,v in all_constraints_dict.items():
-                all_constraints_str = all_constraints_str + f'{k}. {v}'
+                all_constraints_str = all_constraints_str + f'{k}. {v if type(v) == str else v[0]}'
                 if k != list(all_constraints_dict.keys())[-1]:
                     all_constraints_str += '\n'
             with open(prompt_hl_retrieval, "r") as template_file:
@@ -357,40 +390,43 @@ def retrieve_plan_info(li):
 def ground_plan(raw_plan_step, plan_related_info, obj_dict, obj_state, image_features, threshold=3):
     grounded_plan = {}
     task_features = []
-    for num, step in raw_plan_step.items():
-        if isinstance(step, str):
-            grounded_plan[num] = step
-            task_features.append(None)
-        else:
-            if len(plan_related_info) == 1:
-                raw_step, _ = step
-                grounded_plan[num] = replace_step_with_true_obj_name(raw_step,plan_related_info[0])
+    for num, multi_step in raw_plan_step.items():
+        grounded_plan[num] = {}
+        for robot, step in multi_step.items():
+            if isinstance(step, str):
+                grounded_plan[num][robot] = step
                 task_features.append(None)
-                print(f"Replacing '{raw_step}' with '{grounded_plan[num]}'.")
             else:
-                raw_step, obj_names_dict = step
-                # Visual-semantic retrieval
-                query_text = list(obj_names_dict.keys())[0]
-                query_obj_name = get_query_obj(query_text)
-                if query_obj_name is not None:
+                if len(plan_related_info) == 1:
+                    raw_step, _ = step
+                    grounded_plan[num][robot] = replace_step_with_true_obj_name(raw_step,plan_related_info[0])
+                    task_features.append(None)
+                    print(f"Replacing '{raw_step}' with '{grounded_plan[num][robot]}'.")
+                else:
+                    raw_step, obj_names_dict = step
+                    # Visual-semantic retrieval
+                    query_text = list(obj_names_dict.keys())[0]
+                    query_obj_name = get_query_obj(query_text)
+                    if query_obj_name is not None:
+                        sims = []
+                        for feature in image_features:
+                            sim = compare_text_image_sim(query_obj_name, feature)
+                            sims.append(sim)
+                        prob_order = np.argsort(np.array(sims))[::-1]
+                        retrieved_idx = prob_order[:threshold]
+                        plan_related_info = plan_related_info[retrieved_idx]
+                        image_features = image_features[retrieved_idx]
+                    # Visual-visual retrieval
+                    task_feature = get_task_detection(raw_step)
                     sims = []
                     for feature in image_features:
-                        sim = compare_text_image_sim(query_obj_name, feature)
-                        sims.append(sim)
-                    prob_order = np.argsort(np.array(sims))[::-1]
-                    retrieved_idx = prob_order[:threshold]
-                    plan_related_info = plan_related_info[retrieved_idx]
-                    image_features = image_features[retrieved_idx]
-                # Visual-visual retrieval
-                task_feature = get_task_detection(raw_step)
-                sims = []
-                for feature in image_features:
-                    sims.append(((feature.squeeze()-task_feature.squeeze())**2).sum())
-                prob_order = np.argsort(np.array(sims))
-                retrieved_idx = prob_order[0]
-                grounded_plan[num] = replace_step_with_true_obj_name(raw_step,plan_related_info[retrieved_idx])
-                task_features.append(task_feature)
-                print(f"Replacing '{raw_step}' with '{grounded_plan[num]}'.")
+                        sims.append(((feature.squeeze()-task_feature.squeeze())**2).sum())
+                    prob_order = np.argsort(np.array(sims))
+                    retrieved_idx = prob_order[0]
+                    grounded_plan[num][robot] = replace_step_with_true_obj_name(raw_step,plan_related_info[retrieved_idx])
+                    task_features.append(task_feature)
+                    print(f"Replacing '{raw_step}' with '{grounded_plan[num][robot]}'.")
+    
     prompt = prompt_parse_plan + '\n' + f'Plan: {grounded_plan}' + '\n' + f'Object state: {obj_state}' + '\n' + 'Output: '
     response = query_LLM(prompt, ["Plan: "], "cache/llm_parse_plan.pkl")
     grounded_plan = json.loads(response.text)
@@ -474,11 +510,17 @@ def replan(corr_rounds, li, step_name, original_plan, object_state, plan_feature
     correction = tmp[li][step_name][f'Correction {corr_rounds}']
     whole_prompt = prompt_plan_correction + '\n' + '\n' + f"Task: {li}" + "\n" + f"Plan:\n{format_dictionary(original_plan)}" + '\n' + f'Outcome: Interrupted by human at the step "{parsed_step_name}.'
     whole_prompt = whole_prompt + '\n' + 'Correction: ' + correction + '.' + '\n' + f'Object state: {object_state}'
-    response = query_LLM(whole_prompt, ["Task:"], "cache/llm_planning_correction.pkl")
-    task_constraint = get_lines_starting_with(response.text, 'Task constraint:', first=True).split('Task constraint: ')[1]
-    robot_constraint = get_lines_starting_with(response.text, 'Robot constraint:', first=True).split('Robot constraint: ')[1]
-    updated_object_state = get_lines_starting_with(response.text, 'Updated object state:', first=True).split('Updated object state: ')[1]
-    code_step = format_plan(response, "Modified original plan:")
+    for i in range(NUM_RETRIES):
+        try:
+            response = query_LLM(whole_prompt, ["Task:"], "cache/llm_planning_correction.pkl")
+            task_constraint = get_lines_starting_with(response.text, 'Task constraint:', first=True).split('Task constraint: ')[1]
+            robot_constraint = get_lines_starting_with(response.text, 'Robot constraint:', first=True).split('Robot constraint: ')[1]
+            updated_object_state = get_lines_starting_with(response.text, 'Updated object state:', first=True).split('Updated object state: ')[1]
+            code_step = format_plan(response, "Modified original plan:")
+        except:
+            print("GPT ERRORRRRRR")
+        else:
+            break
     add_to_log(code_step, also_print=False)
     print(response.text)
     if 'none' in task_constraint.lower():
@@ -486,7 +528,8 @@ def replan(corr_rounds, li, step_name, original_plan, object_state, plan_feature
     else:
         task_feature = get_constraint_related_feature(task_constraint, plan_features)
         prompt_plan_instance.add_constraints(task_constraint)
-        save_plan_info(task_constraint, task_feature)
+        # save_plan_info(task_constraint, task_feature)
+        save_plan_info(task_constraint)
     if 'none' in robot_constraint.lower():
         pass
     else:
@@ -597,29 +640,30 @@ def save_task_info(locals, step_name, corr_rounds, li):
             except:
                 locals = localss[int(code[-2])-1]
             exec(code, globals(), locals)
-        info_dict : dict = pickle.load(open('cache/tmp_info.pkl', "rb"))
-        if has_code:
-            info_dict['code'] = code_as_policies
-        keys_with_ori = [key for key in info_dict.keys() if 'ori' in key]
-        real_ori = info_dict[keys_with_ori[0]]
-        keys_with_pos = [key for key in info_dict.keys() if 'pos' in key]
-        real_pos = info_dict[keys_with_pos[0]]
-        image_feature, dino_image_feature, detected_pose = get_detected_feature()
-        d_pos, d_ori = detected_pose
-        assert len(d_ori) == 4
-        assert len(real_ori) == 4
-        relative_pose = calculate_relative_pose((real_pos,real_ori), (d_pos, d_ori), is_quat=True)
-        info_to_save = ({'relative_pose': relative_pose,'image_feature': image_feature, 'dino_image_feature': dino_image_feature})
-        other_keys = [key for key in info_dict.keys() if 'ori' not in key and 'pos' not in key]
-        for key in other_keys:
-            info_to_save[key] = info_dict[key]
+        # info_dict : dict = pickle.load(open('cache/tmp_info.pkl', "rb"))
+        # if has_code:
+        #     info_dict['code'] = code_as_policies
+        # keys_with_ori = [key for key in info_dict.keys() if 'ori' in key]
+        # real_ori = info_dict[keys_with_ori[0]]
+        # keys_with_pos = [key for key in info_dict.keys() if 'pos' in key]
+        # real_pos = info_dict[keys_with_pos[0]]
+        # image_feature, dino_image_feature, detected_pose = get_detected_feature()
+        # d_pos, d_ori = detected_pose
+        # assert len(d_ori) == 4
+        # assert len(real_ori) == 4
+        # relative_pose = calculate_relative_pose((real_pos,real_ori), (d_pos, d_ori), is_quat=True)
+        # info_to_save = ({'relative_pose': relative_pose,'image_feature': image_feature, 'dino_image_feature': dino_image_feature})
+        # other_keys = [key for key in info_dict.keys() if 'ori' not in key and 'pos' not in key]
+        # for key in other_keys:
+        #     info_to_save[key] = info_dict[key]
+        info_to_save = {'relative_pose' : ([0,0,0], [1,0,0,0])}
         save_information_perm(info_to_save)
         task_related_info = re.sub(r'\b\w+(_pos|_ori)\b', '', task_related_info)
         task_related_info = re.sub(r',+', ',', task_related_info)
         task_related_info = task_related_info.strip(', ')
     except:
         pass
-    execute_post_action(step_name)
+    # execute_post_action(step_name)
     delete_file('cache/tmp_info.pkl')
 
 def get_constraint_related_feature(constraint, plan_features):
@@ -633,7 +677,10 @@ def get_constraint_related_feature(constraint, plan_features):
     print('****')
     print(prompt)
     print(response.text)
-    vis_idx = eval(response.text)[0]
+    try:
+        vis_idx = eval(response.text)[0]
+    except:
+        vis_idx = 1
     return plan_features[list(plan_features.keys())[vis_idx-1]]
 
 def get_query_obj(query_text):

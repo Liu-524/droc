@@ -1,6 +1,6 @@
 import numpy as np
 import re
-import json
+import json5 as json
 import pickle
 from utils.io.io_utils import add_to_log, read_py, HISTORY_TMP_PATH, load_file
 from utils.LLM_utils import query_LLM
@@ -28,7 +28,10 @@ def format_plan(response, prefix='Response:'):
     non_empty_lines = [line for line in lines if line.strip() != ""]
     result = "\n".join(non_empty_lines)
     if prefix is not None:
-        plan_raw = result.split(prefix)[1]
+        try:
+            plan_raw = result.split(prefix)[1]
+        except:
+            plan_raw = result.split(prefix[:-1])[1]
         lines = plan_raw.split("\n")
         non_empty_lines = []
         for line in lines:
@@ -165,9 +168,16 @@ def format_dictionary(dict_input):
     formatted_string = "{\n"
     last_key = list(dict_input.keys())[-1]
     for key, value in dict_input.items():
-        if key != last_key:
-            formatted_string += f'  "{key}": "{value}",\n'
+        if type(value) == str:
+            if key != last_key:
+                formatted_string += f'  "{key}": "{value}",\n'
+            else:
+                formatted_string += f'  "{key}": "{value}"\n'
         else:
-            formatted_string += f'  "{key}": "{value}"\n'
+            if key != last_key:
+                formatted_string += f'  "{key}": {value},\n'
+            else:
+                formatted_string += f'  "{key}": {value}\n'
+            
     formatted_string += "}"
     return formatted_string

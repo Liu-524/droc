@@ -1,46 +1,44 @@
-Below is a robot's plan for executing a high-level task. The plan is wrong, and human has issued corrections.
+Below is two robots' plan for executing a high-level task. The plan is wrong, and human has issued corrections to one of the robots.
 Please first reason what are the task constraints and robot constraints that the robot fails to obey, and then modify the original plan. Modified original plan should start from beginning and replan should start from current step
 
 Here are some examples:
-Task: put the orange into the fridge.
+Task: put the orange and the apple into the fridge.
 Plan:
 {
-  "1": "Pick up the orange.",
-  "2": "Open the fridge.",
-  "3": "Put the orange into the fridge.",
-  "4": "Close the fridge"
+  "1": {"robot_a" : "Pick up the orange.", "robot_b" : "Pick up the apple."},
+  "2": {"robot_a" : "Open the fridge.", "robot_b": "Wait"},
+  "3": {"robot_a" : "Put the orange into the fridge.", "robot_b": "Put the apple into the fridge."},
+  "4": {"robot_a" : "Close the fridge", "robot_b" : "Wait"}
 }
-Outcome: Interrupted by human at the step "open the fridge".
+Outcome: Interrupted by human at the step "robot_a : open the fridge".
 Correction: you can only pick up one thing at a time.
 Object state: fridge(closed, not full), orange(on table)
 Task constraint: None
-Robot constraint: The robot only has one gripper and can only grasp one thing in hand at a time.
+Robot constraint: robot_a only has one gripper and can only grasp one thing in hand at a time.
 Updated object state: fridge(closed, not full), orange(in gripper)
 Modified original plan:
 {
-  "1": "Open the fridge.",
-  "2": "Pick up the orange.",
-  "3": "Put the orange into the fridge.",
-  "4": "Close the fridge"
+  "1": {"robot_a" : "Open the fridge", "robot_b" : "Pick up the apple"},
+  "2": {"robot_a" : "Pick up the orange", "robot_b": "Put the apple into the fridge."},
+  "3": {"robot_a" : "Put the orange into the fridge.", "robot_b": "Wait"},
+  "4": {"robot_a" : "Close the fridge", "robot_b" : "Wait"}
 }
 Replan:
 {
-  "1": "Put the orange down.",
-  "2": "Open the fridge.",
-  "3": "Pick up the orange.",
-  "4": "Put the orange into the fridge.",
-  "5": "Close the fridge"
+  "1": {"robot_a" : "Put the orange down.", "robot_b": "Wait"},
+  "2": {"robot_a" : "Open the fridge", "robot_b" : "Wait"},
+  "3": {"robot_a" : "Pick up the orange", "robot_b": "Put the apple into the fridge."},
+  "4": {"robot_a" : "Put the orange into the fridge.", "robot_b": "Wait"},
+  "5": {"robot_a" : "Close the fridge", "robot_b" : "Wait"}
 }
 
 Task: sort the forks into the shelf
 Plan:
 {
-  "1": "Pick up fork1",
-  "2": "Put fork1 in shelf1",
-  "3": "Pick up fork2",
-  "4": "Put fork2 in shelf1"
+  "1": {"robot_a" : "Pick up fork1", "robot_b" : "Pick up fork2"},
+  "2": {"robot_a" : "Put fork1 in shelf1", "robot_b" : "Put fork2 in shelf1"}
 }
-Outcome: Interrupted by human at the step "put fork1 in shelf1".
+Outcome: Interrupted by human at the step "robot_a put fork1 in shelf1".
 Correction: that's the wrong shelf to put
 Object state: shelf1(empty), shelf2(empty), shelf3(empty), fork1(on table), fork2(on table)
 Task constraint: Forks should be put in shelf2.
@@ -48,14 +46,64 @@ Robot constraint: None
 Updated object state: shelf1(empty), shelf2(empty), shelf3(empty), fork1(in gripper), fork2(on table)
 Modified original plan:
 {
-  "1": "Pick up fork1",
-  "2": "Put fork1 in shelf2",
-  "3": "Pick up fork2",
-  "4": "Put fork2 in shelf2"
+  "1": {"robot_a" : "Pick up fork1", "robot_b" : "Pick up fork2"},
+  "2": {"robot_a" : "Put fork1 in shelf2", "robot_b" : "Put fork2 in shelf2"}
 }
 Replan:
 {
-  "1": "Put fork1 in shelf2",
-  "2": "Pick up fork2",
-  "3": "Put fork2 in shelf2"
+  "1": {"robot_a" : "Put fork1 in shelf1", "robot_b" : "Put fork2 in shelf1"}
 }
+
+Task: Clean up the table.
+Plan:
+{
+  "1": {"robot_a" : "Pick up box1", "robot_b" : "Pick up box2"},
+  "2": {"robot_a" : "Put box1 to trash", "robot_b" : "Put box2 to trash"}
+}
+Outcome: Interrupted by human at the step "robot_b put box2 in trash".
+Correction: robot_b cannot do that. 
+Object state: trash(empty), box1(on table), box2(on table)
+Task constraint: None
+Robot constraint: robot_b cannot reach the trash can.
+Updated object state: trash(empty), box1(on table), box2(on table)
+Modified original plan:
+{
+  "1": {"robot_a" : "Pick up box1", "robot_b" : "Pick up box2"},
+  "2": {"robot_a" : "Put box1 to trash", "robot_b" : "Wait"}
+  "3": {"robot_a" : "Take box2", "robot_b": "Give box2 to robot_a"}
+  "4": {"robot_a" : "Put box2 to trash", "robot_b": "Wait"}
+}
+Replan:
+{
+  "1": {"robot_a" : "Put box1 to trash", "robot_b" : "Wait"}
+  "2": {"robot_a" : "Take box2", "robot_b": "Give box2 to robot_a"}
+  "3": {"robot_a" : "Put box2 to trash", "robot_b": "Wait"}
+}
+
+Task: Pour soda in the cup.
+Plan:
+{
+  "1": {"robot_a" : "Pick up soda", "robot_b" : "Pick up cup"},
+  "2": {"robot_a" : "Open soda", "robot_b" : "Put cup on table"},
+  "3": {"robot_a" : "Pour in the cup", "robot_b" : "Wait"},
+}
+Outcome: Interrupted by human at the step "robot_a : Open soda".
+Correction: You need two hands to open a soda.
+Object state: soda(with robot_a), cup(with robot_b), table(empty)
+Task constraint: Open soda requires two robot hands
+Robot constraint: robot_a only has one gripper
+Updated object state: trash(empty), box1(on table), box2(on table)
+Modified original plan:
+{
+  "1": {"robot_a" : "Pick up soda", "robot_b" : "Pick up cup"},
+  "2": {"robot_a" : "Wait", "robot_b" : "Put cup on table"},
+  "3": {"robot_a" : "Open soda with robot_b", "robot_b" : "Open soda with robot_a"},
+  "4": {"robot_a" : "Pour in the cup", "robot_b" : "Wait"},
+}
+Replan:
+{
+  "1": {"robot_a" : "Wait", "robot_b" : "Put cup on table"},
+  "2": {"robot_a" : "Open soda with robot_b", "robot_b" : "Open soda with robot_a"},
+  "3": {"robot_a" : "Pour in the cup", "robot_b" : "Wait"},
+}
+

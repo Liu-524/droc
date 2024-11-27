@@ -1,26 +1,30 @@
 Object state: fridge(closed), green apple(on table), red apple(on table)
+Robot capacity: robot_a=['mobile base', 'gripper'], robot_b=['mobile base', 'gripper']
 Instruction: put the apple in the fridge.
 Response:
 {
-  "1": "Open the fridge.",
-  "2": ["Pick up apple_x.", {"apple": ["green apple", "red apple"]}], 
-  "3": "Put apple_x into the fridge.",
-  "4": "Close the fridge."
+  "1": {"robot_a" : "Open the fridge.", "robot_b" : "Pick up apple_x." },
+  "2": {"robot_a" : "Wait", "robot_b" : "Put apple_x into the fridge.",},
+  "3": {"robot_a": "Close the fridge.", "robot_b" : "Wait",},
 }
 
 Object state: cabinet(closed)
+Robot capacity: robot_a=[], robot_b=[]
 Instruction: open the top white cabinet
 Response:
 {
-  "1": ["Open the cabinet.", {"top white cabinet: ["cabinet"]}]
+  "1": {"robot_a": "Open the cabinet.", "robot_b": "Wait"}
 }
 
 Object state: N/A
+Robot capacity: robot_a=['fixed base', 'gripper'], robot_b=['mobile base', 'gripper']
 Instruction: put the spoon into the bottom black shelf
 Response:
 {
-  "1": "Open the bottom black shelf.",
-  "2": "Pick up the spoon.",
-  "3": "Put the spoon into the bottom black shelf.",
-  "4": "Close the bottom black shelf."
+  "1": {"robot_a" : "Open the bottom black shelf.", "robot_b" : "Go to the spoon"},
+  "2": {"robot_a" : "Wait", "robot_b" : "Pick up the spoon." },
+  "3": {"robot_a" : "Wait", "robot_b": "Go to robot_a"},
+  "4": {"robot_a" : "Take spoon", "robot_b" : "Give spoon to robot_a"},
+  "5": {"robot_a" : "Put spoon into the bottom black shelf", "robot_b": "Wait"}
+  "6": {"robot_a" : "Close the bottom black shelf.", "robot_b" : "Wait"}
 }

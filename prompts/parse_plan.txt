@@ -1,8 +1,9 @@
-Plan: {'1': 'Pick up apple_1.', '2': 'Open fridge_1.', '3': 'Put apple_x into fridge_x.', '4': 'Close fridge_x.'}
+Plan: {"1": {"robot_a": "Pick up apple_1", "robot_b": "Open fridge_1" }, "2": {"robot_a": "Wait", "robot_b": "Go to fridge_1"}, 3: {"robot_a" : "Wait", "robot_b": "Put apple_x in fridge_x"}, "4": {"robot_a": "Close fridge_x", "robot_b": "Wait"}}
 Object state: fridge_1(open), fridge_2(closed), apple_1(on table), apple_2(on table)
 Output: 
 {
-    "1": "Pick up apple_1.",
-    "2": "Put apple_1 into fridge_1",
-    "3": "Close fridge_1"
+    "1": {"robot_a": "Pick up apple_1", "robot_b": "Open fridge_1" }, 
+    "2": {"robot_a": "Wait", "robot_b": "Go to fridge_1"}, 
+    "3": {"robot_a" : "Wait", "robot_b": "Put apple_x in fridge_x"}, 
+    "4": {"robot_a": "Close fridge_x", "robot_b": "Wait"},
 }

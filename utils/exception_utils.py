@@ -162,7 +162,8 @@ def no_exception_handler(localss, locals, corr_rounds, li, step_name, failure_re
             pickle.dump(tmp, open(HISTORY_TMP_PATH, "wb"))
             return True, corr_rounds, None, use_interrupted_code
         else:
-            a = input(f'Are you sure I have finish the task: "{parsed_step_name}" ? (y/n)')
+            # a = input(f'Are you sure I have finish the task: "{parsed_step_name}" ? (y/n)')
+            a = 'y'
             if 'y' in a.lower():
                 tmp[li][step_name][f'Outcome {corr_rounds}'] = 'Done.'
                 tmp[li][step_name][f'Correction {corr_rounds}'] = 'Done'

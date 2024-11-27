@@ -4,7 +4,7 @@ import pickle
 from collections import defaultdict
 from utils.io.io_utils import add_to_log
 
-openai.api_key = 'YOUR_KEY_HERE'
+openai.api_key = ""
 
 
 def create_or_load_cache(cache_file):
@@ -43,8 +43,11 @@ def query_LLM(prompt, stop_sequences, cache_file):
                 else:
                     print(e)
         cache[prompt]["gpt-4"] = response
+    
     pickle.dump(cache, open(cache_file, "wb"))
     response.text = response.choices[0].message['content']
+    # print(response.text)
+    # print("wait?")
     return response
 
 
