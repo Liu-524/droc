@@ -1,0 +1,2 @@
+Object State: table(mounted robot_b), orange(on table), knife(in sink), cutting_board(in sink), robot_a(at table), robot_b(mounted on table)
+Robot Capacity: robot_a=['mounted base', 'gripper'], robot_b=['mobile base', 'gripper']

@@ -1,0 +1,74 @@
+****Step name: wait****
+y
+****Step name: go to the sink****
+y
+****Step name: wait****
+y
+****Step name: pick up the knife****
+y
+****Step name: pick up the apple****
+y
+****Step name: go to the table****
+y
+****Step name: give apple to robot_b****
+robot_b has knife in its hand already. put the apple down.
+****Step name: put the apple on table****
+y
+****Step name: wait****
+y
+****Step name: wait****
+y
+****Step name: pick up the apple from table****
+cut the apple, don't pick it.
+****Step name: wait****
+y
+****Step name: cut the apple on table****
+you can damage the table. Use a cutting board.
+****Step name: get cutting board from sink****
+robot_a is mounted. Let robot_b take the cutting board.
+****Step name: wait****
+done
+****Step name: get cutting board from sink****
+put the knife down first
+****Step name: wait****
+y
+****Step name: put the knife on the table****
+y
+****Step name: wait****
+y
+****Step name: get cutting board from sink****
+break down this task. go to the sink first.
+****Step name: wait****
+y
+****Step name: move to the sink****
+y
+****Step name: wait****
+y
+****Step name: get cutting board from sink****
+y
+****Step name: wait****
+y
+****Step name: move back to the table****
+y
+****Step name: wait****
+y
+****Step name: move apple to cutting board****
+robot_a is mounted on table. Let the mounted bot do the rest.
+****Step name: move apple to cutting board****
+let robot_b put down the cutting board before we can put the apple.
+****Step name: place cutting board on table****
+y
+****Step name: wait****
+y
+****Step name: move apple to cutting board****
+y
+****Step name: wait****
+y
+****Step name: get knife from table****
+y
+****Step name: wait****
+y
+****Step name: cut the apple on cutting board****
+y
+****Step name: wait****
+y

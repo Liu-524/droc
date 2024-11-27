@@ -1,0 +1,174 @@
+****Step name: wait****
+y
+****Step name: go to the fridge****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: take the bottle out of the fridge****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+robot cannot close fridge with bottle in hand.
+****Step name: pick up the cup****
+y
+****Step name: pass bottle to robot_a****
+close the fridge first
+****Step name: wait****
+y
+****Step name: close the fridge****
+robot cannot close fridge with bottle in hand. put it down first.
+****Step name: wait****
+y
+****Step name: put bottle on table****
+robot_b is not at the table. just put it down.
+robot_b is not at the table. just put it on ground.
+****Step name: wait****
+y
+****Step name: put bottle on ground****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+y
+****Step name: pick up bottle from ground****
+robot_a is at the table and cannot reach the bottle.
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+fridge is already closed.
+fridge is already closed, bring the bottle to the table.
+****Step name: wait****
+y
+****Step name: open the fridge****
+it needs to go to fridge first.
+****Step name: grab the cup****
+y
+****Step name: go to the fridge****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: take the bottle****
+y
+****Step name: wait****
+y
+****Step name: go to robot_a****
+close the fridge first.
+****Step name: wait****
+y
+****Step name: close the fridge****
+robot cannot close fridge door with bottle in hand. Put it down first.
+****Step name: wait****
+y
+****Step name: put the bottle on the table****
+table is far. put it on ground.
+robot is not at the table. put the bottle on ground instead.
+****Step name: wait****
+y
+****Step name: put the bottle on the ground****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+y
+****Step name: pour wine into cup****
+robot_a don't have the bottle yet. Wait for robot_b.
+****Step name: wait****
+y
+****Step name: take the bottle****
+y
+****Step name: pour wine into cup****
+wait until robot_b brings the bottle
+****Step name: wait****
+y
+****Step name: pour wine into cup****
+go to the table first.
+****Step name: wait****
+y
+****Step name: go to table****
+y
+****Step name: wait****
+y
+****Step name: pour wine into cup****
+open the bottle before pouring.
+****Step name: wait****
+y
+****Step name: open the bottle****
+it takes both robots to open a bottle.
+****Step name: assist robot_b to open the bottle****
+robot_a cannot help with cup in its hand. put the cup down first.
+****Step name: wait****
+y
+****Step name: put cup on table****
+robot_b does not have the cup. robot_a need to put the cup down.
+****Step name: put cup on table****
+y
+****Step name: wait****
+y
+****Step name: assist robot_b to open the bottle****
+y
+****Step name: open the bottle with robot_a****
+y
+****Step name: wait****
+y
+****Step name: pick up cup from table****
+robot_b has bottle in its hand, just pour to the cup.
+****Step name: wait****
+y
+****Step name: pour wine into the cup on the table****
+y
+****Step name: pick up the cup of wine****
+y
+****Step name: wait****
+robot_b needs to return the bottle to fridge.
+****Step name: pick up the cup of wine****
+y
+****Step name: put bottle back in fridge****
+close bottle before returning it
+****Step name: close the bottle****
+y
+****Step name: wait****
+y
+****Step name: put bottle back in fridge****
+this step needs to be broken down.
+go to the fridge first.
+****Step name: move to fridge****
+y
+****Step name: wait****
+y
+****Step name: put bottle back in fridge****
+open the fridge door first.
+****Step name: open the fridge door****
+robot cannot open door with bottle in hand. put it on the ground first.
+****Step name: put bottle on the ground****
+y
+****Step name: wait****
+y
+****Step name: open the fridge door****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: put bottle back in fridge****
+y
+****Step name: wait****
+y
+****Step name: close the fridge door****
+y
+****Step name: deliver cup of wine****
+y
