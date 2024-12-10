@@ -1,0 +1,40 @@
+****Step name: go to the sink****
+y
+****Step name: pick up orange****
+y
+****Step name: pick up the cutting_board****
+y
+****Step name: wait****
+y
+****Step name: go to table****
+y
+****Step name: wait****
+y
+****Step name: put down the cutting_board on table****
+y
+****Step name: put down the orange on the cutting_board****
+y
+****Step name: go to the sink****
+y
+****Step name: wait****
+y
+****Step name: pick up the knife****
+y
+****Step name: wait****
+y
+****Step name: go to the table****
+y
+****Step name: wait****
+y
+****Step name: slice the orange with the knife****
+robot_a shouldn't slice the organe, this job should be done by robot_b
+****Step name: wait****
+robot_a shouldn't slice the organe, this job is for robot_b to do.
+****Step name: give knife to robot_b****
+y
+****Step name: take knife from robot_a****
+y
+****Step name: wait****
+y
+****Step name: slice the orange with the knife****
+y

@@ -1,0 +1,28 @@
+****Step name: open the box****
+you don't need to open the box. just wait.
+****Step name: wait****
+y
+****Step name: pick up the stapler****
+y
+****Step name: wait****
+y
+****Step name: put the stapler into the box****
+y
+****Step name: wait****
+y
+****Step name: pick up the pen****
+y
+****Step name: wait****
+y
+****Step name: put the pen into the box****
+y
+****Step name: wait****
+Don't wait. Take the box away.
+****Step name: pick up the box****
+y
+****Step name: wait****
+y
+****Step name: take the box away****
+y
+****Step name: wait****
+y

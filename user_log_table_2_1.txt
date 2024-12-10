@@ -1,0 +1,26 @@
+****Step name: put down the box****
+You don't need to put down the box. just wait.
+****Step name: wait****
+y
+****Step name: pick up the stapler****
+y
+****Step name: wait****
+y
+****Step name: place the stapler in the box****
+y
+****Step name: wait****
+y
+****Step name: pick up the pen****
+y
+****Step name: wait****
+y
+****Step name: place the pen in the box****
+y
+****Step name: wait****
+Do not wait. Take away the box.
+****Step name: pick up the apple and put it in the box****
+Do not pick the apple. take away the box.
+****Step name: take the box away****
+y
+****Step name: wait****
+y

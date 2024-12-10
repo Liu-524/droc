@@ -1,0 +1,36 @@
+****Step name: go to the sink****
+y
+****Step name: wait****
+y
+****Step name: pick up cutting_board****
+y
+****Step name: wait****
+y
+****Step name: go to table****
+y
+****Step name: wait****
+y
+****Step name: place cutting_board on table****
+y
+****Step name: wait****
+y
+****Step name: go to sink****
+y
+****Step name: place orange on cutting_board****
+y
+****Step name: pick up knife****
+y
+****Step name: wait****
+y
+****Step name: go to table****
+y
+****Step name: wait****
+y
+****Step name: give knife to robot_b****
+y
+****Step name: take knife from robot_a****
+y
+****Step name: wait****
+y
+****Step name: cut the orange****
+y

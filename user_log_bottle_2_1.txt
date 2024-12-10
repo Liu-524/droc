@@ -1,0 +1,100 @@
+****Step name: walk to the fridge****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+You cannot close the fridge because you are holding the bottle. Just put the bottle on the floor.
+****Step name: put the bottle on the floor****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: go to the table****
+y
+****Step name: wait****
+y
+****Step name: pour juice from the bottle into the cup****
+you cannot pour juice. Put the bottle on the table.
+****Step name: put the bottle on the table****
+y
+****Step name: pick up the cup****
+Don't pick the cup. Open the bottle first.
+****Step name: open the bottle****
+You cannot open the bottle alone. Two robots are needed to open a bottle.
+****Step name: wait****
+y
+****Step name: pick up the cup****
+do not pick up the cup. Open the bottle with robot_a
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: open the bottle with robot_b****
+y
+****Step name: open the bottle with robot_a****
+y
+****Step name: pick up the cup****
+You cannot pick cup with bottle in hand. Just pour the juice.
+****Step name: pour juice from the bottle into the cup****
+y
+****Step name: hold the cup while pouring****
+y
+****Step name: put the bottle back on the table****
+y
+****Step name: wait****
+Close the bottle first.
+****Step name: close the bottle****
+y
+****Step name: wait****
+y
+****Step name: put the bottle back on the table****
+Bottle is on the table. Just pick it up.
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: go to the fridge****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+You cannot open the fridge. Just put the bottle on the floor.
+****Step name: put the bottle on the floor****
+y
+****Step name: wait****
+y
+****Step name: wait****
+Do not wait. Open the fridge and put the bottle back.
+****Step name: pick up the bottle****
+Open the fridge first.
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: put the bottle in the fridge****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+y
+****Step name: wait****
+y

@@ -12,7 +12,7 @@ from utils.io.io_utils import read_py, HISTORY_TMP_PATH, add_to_log, load_file, 
 from utils.LLM_utils import query_LLM
 from utils.transformation_utils import get_real_pose, calculate_relative_pose
 from utils.exception_utils import InterruptedByHuman, GraspError, RobotError, PlanningError, WrongDetection, interruption_handler, robot_error_handler, grasp_error_handler, detection_error_handler, no_exception_handler, other_exception_handler
-
+import pyperclip
 prompt_plan_instance = modulable_prompt('prompts/hl_backbone.txt', 'prompts/hl_content.txt')
 prompt_codepolicy_instance = modulable_prompt('prompts/ll_backbone.txt', 'prompts/ll_content.txt')
 prompt_hl_retrieval = 'prompts/hl_retrieval.txt'
@@ -219,6 +219,7 @@ def main(args):
                         parsed_step_name = step_name.lower()[:-1] if step_name[-1] == '.' else step_name.lower()
                         add_to_log("****Step name: " + parsed_step_name + '****', file_path=USER_LOG)
                         add_to_log(f"{robot} is performing the task: {parsed_step_name}.", also_print=True)
+                        pyperclip.copy(f"{robot} is performing the task: {parsed_step_name}.")
                         if len(waits) > 0:
                             add_to_log(f"{', '.join(waits)} waiting for this task to complete...", also_print=True)
                         else:

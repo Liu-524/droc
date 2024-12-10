@@ -1,0 +1,34 @@
+****Step name: pick up the box****
+y
+****Step name: pick up the stapler****
+y
+****Step name: open the box****
+you don't need to open the box, just put it down.
+****Step name: put the box down on table****
+y
+****Step name: place stapler in the box****
+y
+****Step name: wait****
+y
+****Step name: pick up the pen****
+y
+****Step name: wait****
+y
+****Step name: place pen in the box****
+y
+****Step name: wait****
+y
+****Step name: pick up apple****
+the apple should keep on table
+****Step name: wait****
+y
+****Step name: place pen in the box****
+the pen is already in the box, just wait
+****Step name: pick up box****
+y
+****Step name: wait****
+y
+****Step name: move box to designated storage area****
+y
+****Step name: wait****
+y

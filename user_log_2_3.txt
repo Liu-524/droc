@@ -1,0 +1,23 @@
+****Step name: go to the sink****
+y
+****Step name: wait****
+****Step name: go to the sink****
+y
+****Step name: pick up the orange****
+y
+****Step name: pick up the knife****
+y
+****Step name: wait****
+y
+****Step name: go to the robot_b****
+y
+****Step name: wait****
+y
+****Step name: give knife to robot_b****
+robot_b needs to set orange down
+****Step name: wait****
+y
+****Step name: place orange on cutting board****
+the cutting board is in the sink
+****Step name: move the cutting board from the sink to the table****
+robot_a needs to set the knife down

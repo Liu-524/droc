@@ -1,0 +1,110 @@
+****Step name: go to the fridge****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle of orange juice****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+set the bottle on the ground before closing the fridge
+****Step name: set the bottle on the ground****
+y
+****Step name: go to the cup****
+robot_b is mounted. robot_b wait.
+****Step name: close the fridge****
+y
+****Step name: wait****
+y
+****Step name: go to the cup****
+robot_a needs to pick up bottle first
+****Step name: go back to the fridge****
+y
+****Step name: wait****
+y
+****Step name: take out the bottle of orange juice****
+y
+****Step name: wait****
+y
+****Step name: go to the cup****
+y
+****Step name: wait****
+y
+****Step name: pick up the cup****
+robot_a needs to set the bottle down first
+****Step name: go back to the fridge****
+robot_a needs to put the bottle on the table
+****Step name: put the bottle on the table****
+y
+****Step name: wait****
+y
+****Step name: go back to the fridge****
+robot_a should remain at the table and open the bottle
+****Step name: open the bottle****
+robot_b needs to help robot_a open the bottle
+****Step name: go to the bottle****
+robot_a and robot_b should work together to open the bottle
+****Step name: wait****
+both robots are already at the bottle. the robots need to work together to open the bottle
+****Step name: hold the bottle****
+y
+****Step name: help robot_a open the bottle****
+y
+****Step name: go to the cup****
+y
+****Step name: pour juice into the cup****
+robot_b is not holding the bottle. let robot_a pour the juice.
+****Step name: pour juice into the cup****
+y
+****Step name: wait****
+y
+****Step name: close the bottle****
+y
+****Step name: wait****
+y
+****Step name: return the bottle to the fridge****
+break the task down. robot_a should go to fridge first.
+****Step name: go to the fridge****
+y
+****Step name: wait****
+y
+****Step name: return the bottle to the fridge****
+break the task down more. robot_a needs to set the bottle down and then open the fridge.
+****Step name: set down the bottle****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: return the bottle to the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the cup****
+robot_a needs to close the fridge first
+****Step name: close the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the cup****
+robot_a is not at the table. robot_b should pick up the cup since it's at the table
+****Step name: return the bottle to the fridge****
+the bottle is already in the fridge. robot_b should pick the cup up
+****Step name: stay at the fridge****
+y
+****Step name: pick up the cup****
+y
+****Step name: go to the table****
+y
+****Step name: wait****
+y

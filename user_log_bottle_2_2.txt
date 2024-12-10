@@ -1,0 +1,95 @@
+****Step name: move to the fridge****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: pick up the cup****
+y
+****Step name: close the fridge****
+you cannot close the fridge with bottle in hand. put it down first.
+****Step name: put the bottle down****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: pour juice into the cup****
+You cannot pour now. Wait for robot_a to bring it.
+****Step name: bring the bottle to robot_b****
+y
+****Step name: wait****
+y
+****Step name: wait****
+y
+****Step name: pour juice into the cup****
+bottle needs to be opened to pour. open it first.
+****Step name: open the bottle****
+opening a bottle takes two hands. you two needs to work together.
+****Step name: assist robot_b to open the bottle****
+robot_b needs to put down the cup first.
+****Step name: put cup on the table****
+y
+****Step name: wait****
+y
+****Step name: assist robot_b to open the bottle****
+y
+****Step name: open the bottle with robot_a****
+y
+****Step name: wait****
+y
+****Step name: pour juice into the cup****
+robot_a has the bottle. Let it pour.
+****Step name: pour juice into the cup****
+y
+****Step name: wait****
+y
+****Step name: close the bottle****
+y
+****Step name: wait****
+y
+****Step name: wait****
+don't wait. Put the bottle back in the fridge.
+****Step name: put the bottle back in the fridge****
+the plan is too high-level. break it down.
+****Step name: open the bottle****
+don't open the bottle. bring it to the fridge.
+****Step name: bring the bottle to the fridge****
+y
+****Step name: wait****
+y
+****Step name: put the bottle in the fridge****
+fridge is closed. You need to open n it first
+****Step name: open the fridge****
+you cannot open fridge with bottle in hand. put it down first.
+****Step name: put the bottle down on the table****
+You are not at the table. Just put it down
+Just put the bottle on ground.
+****Step name: put the bottle on the ground****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle and put it in the fridge****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+y
+****Step name: pick up the cup****
+y
+****Step name: wait****
+y
+****Step name: bring cup to target****
+y

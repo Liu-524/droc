@@ -1,2 +1,2 @@
-Object State: table(mounted robot_b), box(on table), stapler(on table), pen(on table), apple(on table), robot_a(at table), robot_b(mounted on table)
+Object State: table(mounted robot_b), cupboard(below counter), plate(in cupboard), silverware(in cupboard), box(on cupboard), robot_a(at table), robot_b(on table)
 Robot Capacity: robot_a=['mobile base', 'gripper'], robot_b=['mounted base', 'gripper']

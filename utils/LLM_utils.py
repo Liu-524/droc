@@ -4,7 +4,7 @@ import pickle
 from collections import defaultdict
 from utils.io.io_utils import add_to_log
 
-openai.api_key = ""
+openai.api_key = "API_KEY"
 
 
 def create_or_load_cache(cache_file):

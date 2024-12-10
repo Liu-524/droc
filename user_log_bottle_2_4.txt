@@ -1,0 +1,96 @@
+****Step name: go to the fridge****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: take the bottle out of the fridge****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+you cannot close the fridge, ou should put the bottle on the floor first and then close the firdge
+****Step name: put the bottle on the floor****
+y
+****Step name: go to the cup****
+robot_b cannot move, and you should wait
+****Step name: close the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle from the floor****
+y
+****Step name: wait****
+y
+****Step name: open the bottle****
+robot_a and robot_b should both work on openning the bottle
+****Step name: signal robot_b to assist with bottle****
+y
+****Step name: pick up the cup****
+robot_b shouldn't pick up the cup, and robot_b should help robot_a to open the bottle
+****Step name: put the cup back on the table****
+robot_a cannot put the cup, and the robot_a should go to the table
+****Step name: go to the table****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: move to assist robot_a with the bottle****
+y
+****Step name: open bottle with robot_b****
+y
+****Step name: assist robot_a to open the bottle****
+y
+****Step name: pour juice into cup on table****
+y
+****Step name: hold bottle for a while****
+robot_b is not holding the bottle, and robot_a should close the bottle
+****Step name: pour juice into cup on table****
+you have already put the juice, and now robot_a should close the bottle
+****Step name: close the bottle****
+y
+****Step name: wait****
+y
+****Step name: put the bottle back into the fridge****
+robot_a shouldn't put the bottle back to fridge now, and the robot_a should go to the fridge firstly
+****Step name: approach the fridge****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+you should put the bottle on the floor firstly, and then open the fridge
+****Step name: put the bottle on the floor****
+y
+****Step name: wait****
+y
+****Step name: open the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the bottle****
+y
+****Step name: wait****
+y
+****Step name: put the bottle back into the fridge****
+y
+****Step name: wait****
+y
+****Step name: close the fridge****
+y
+****Step name: wait****
+y
+****Step name: pick up the cup from the table****
+robot_a is not near the table, and robot_a cannot pick up the cup. Robot_b should pick up the cup
+****Step name: put the bottle back into the fridge****
+the bottle is already in the firdge, and the robot_a cannot put the bottle back. Robot_b should pick up the cup right now
+****Step name: wait****
+y
+****Step name: pick up the cup from the table****
+y
+****Step name: wait****
+y
+****Step name: serve the cup of juice****
+y

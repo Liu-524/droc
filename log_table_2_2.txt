@@ -1,0 +1,1145 @@
+Imagine you are working with two robot equipped with a two-fingered gripper for grasping. The robots' mission is to collaborate and complete tasks based on a given instructions. However, they may struggle with high-level instructions
+Your role is to understand those instructions and break them down into smaller, actionable sub-tasks. You will also assign the tasks to specific robot and order the tasks. If there is ambiguity in deciding the object given existing information, just list all possible objects like Example 1.
+If one robot needs to wait for the other to finish a particular sub-task, assign them task "wait" at the same line. 
+Here are some examples:
+
+Object state: fridge(closed), green apple(on table), red apple(on table)
+Robot capacity: robot_a=['mobile base', 'gripper'], robot_b=['mobile base', 'gripper']
+Instruction: put the apple in the fridge.
+Response:
+{
+  "1": {"robot_a" : "Open the fridge.", "robot_b" : "Pick up apple_x." },
+  "2": {"robot_a" : "Wait", "robot_b" : "Put apple_x into the fridge.",},
+  "3": {"robot_a": "Close the fridge.", "robot_b" : "Wait",},
+}
+
+Object state: cabinet(closed)
+Robot capacity: robot_a=[], robot_b=[]
+Instruction: open the top white cabinet
+Response:
+{
+  "1": {"robot_a": "Open the cabinet.", "robot_b": "Wait"}
+}
+
+Object state: N/A
+Robot capacity: robot_a=['fixed base', 'gripper'], robot_b=['mobile base', 'gripper']
+Instruction: put the spoon into the bottom black shelf
+Response:
+{
+  "1": {"robot_a" : "Open the bottom black shelf.", "robot_b" : "Go to the spoon"},
+  "2": {"robot_a" : "Wait", "robot_b" : "Pick up the spoon." },
+  "3": {"robot_a" : "Wait", "robot_b": "Go to robot_a"},
+  "4": {"robot_a" : "Take spoon", "robot_b" : "Give spoon to robot_a"},
+  "5": {"robot_a" : "Put spoon into the bottom black shelf", "robot_b": "Wait"}
+  "6": {"robot_a" : "Close the bottom black shelf.", "robot_b" : "Wait"}
+}
+
+Rules:
+1. In each sub-task of your response, the robot should manipulate one object and only move its gripper once.
+2. If you think the instruction is low-level enough, just repeat the instruction in your response
+3. Omit assumptions and only follow a json format after the word Response:
+4. All items should be put inside the box.
+5. Mounted robot cannot move around but can place objects in the box.
+6. Robot_a is already holding the box.
+7. mounted robot_a is more efficient in gathering items from the table.
+8. robot_a needs to put down the box before it picks up other things.
+9. The apple should be left on the table.
+10. robot_a should be careful to differentiate between items that should be picked up and those that should be left.
+11. robot_a is a mounted robot and cannot move around.
+
+Object state: Object State: table(mounted robot_b), box(on table), stapler(on table), pen(on table), apple(on table), robot_a(at table), robot_b(mounted on table)
+Robot Capacity: robot_a=['mobile base', 'gripper'], robot_b=['mounted base', 'gripper']
+{'1': {'robot_a': 'Open the box.', 'robot_b': 'Pick up the stapler.'}, '2': {'robot_a': 'Wait', 'robot_b': 'Put the stapler into the box.'}, '3': {'robot_a': 'Wait', 'robot_b': 'Pick up the pen.'}, '4': {'robot_a': 'Wait', 'robot_b': 'Put the pen into the box.'}, '5': {'robot_a': 'Close the box.', 'robot_b': 'Wait'}}
+robot_a is performing the task: open the box.
+All robots are busy on their tasks.
+current_codeline:move_gripper_to_pose(moveup_pos, current_ori)
+Please determine whether the given correction indicates there's an error beyond the task's scope.
+
+Task: open the top shelf
+Correction: move right a little bit
+Output: no
+
+Task: pick up the apple.
+Correction: that's wrong. move left please
+Output: no
+
+Task: put the apple into the fridge
+Correction: you should open the fridge first
+Output: yes
+
+Task: open the fridge
+Correction: wrong detection
+Output: no
+
+Task: pick up the pen
+Correction: no, pick the red pen
+Output: yes
+
+Task: robot_a: Open the box.
+Correction: you don't need to open the box. just wait.
+Output: 
+yes
+**Error Type: Planning error
+{'1': {'robot_a': 'Wait', 'robot_b': 'Pick up the stapler.'}, '2': {'robot_a': 'Wait', 'robot_b': 'Put the stapler into the box.'}, '3': {'robot_a': 'Wait', 'robot_b': 'Pick up the pen.'}, '4': {'robot_a': 'Wait', 'robot_b': 'Put the pen into the box.'}, '5': {'robot_a': 'Wait', 'robot_b': 'Wait'}}
+No objects need to be put into the box, and hence, robot_a doesn't need to open the box.
+None
+{'1': {'robot_a': 'Wait', 'robot_b': 'Pick up the stapler.'}, '2': {'robot_a': 'Wait', 'robot_b': 'Put the stapler into the box.'}, '3': {'robot_a': 'Wait', 'robot_b': 'Pick up the pen.'}, '4': {'robot_a': 'Wait', 'robot_b': 'Put the pen into the box.'}, '5': {'robot_a': 'Wait', 'robot_b': 'Wait'}}
+File 'cache/history_tmp.pkl' has been deleted successfully.
+Imagine you are working with two robot equipped with a two-fingered gripper for grasping. The robots' mission is to collaborate and complete tasks based on a given instructions. However, they may struggle with high-level instructions
+Your role is to understand those instructions and break them down into smaller, actionable sub-tasks. You will also assign the tasks to specific robot and order the tasks. If there is ambiguity in deciding the object given existing information, just list all possible objects like Example 1.
+If one robot needs to wait for the other to finish a particular sub-task, assign them task "wait" at the same line. 
+Here are some examples:
+
+Object state: fridge(closed), green apple(on table), red apple(on table)
+Robot capacity: robot_a=['mobile base', 'gripper'], robot_b=['mobile base', 'gripper']
+Instruction: put the apple in the fridge.
+Response:
+{
+  "1": {"robot_a" : "Open the fridge.", "robot_b" : "Pick up apple_x." },
+  "2": {"robot_a" : "Wait", "robot_b" : "Put apple_x into the fridge.",},
+  "3": {"robot_a": "Close the fridge.", "robot_b" : "Wait",},
+}
+
+Object state: cabinet(closed)
+Robot capacity: robot_a=[], robot_b=[]
+Instruction: open the top white cabinet
+Response:
+{
+  "1": {"robot_a": "Open the cabinet.", "robot_b": "Wait"}
+}
+
+Object state: N/A
+Robot capacity: robot_a=['fixed base', 'gripper'], robot_b=['mobile base', 'gripper']
+Instruction: put the spoon into the bottom black shelf
+Response:
+{
+  "1": {"robot_a" : "Open the bottom black shelf.", "robot_b" : "Go to the spoon"},
+  "2": {"robot_a" : "Wait", "robot_b" : "Pick up the spoon." },
+  "3": {"robot_a" : "Wait", "robot_b": "Go to robot_a"},
+  "4": {"robot_a" : "Take spoon", "robot_b" : "Give spoon to robot_a"},
+  "5": {"robot_a" : "Put spoon into the bottom black shelf", "robot_b": "Wait"}
+  "6": {"robot_a" : "Close the bottom black shelf.", "robot_b" : "Wait"}
+}
+
+Instruction: clean up the table.
+Response:
+{
+  "1": {'robot_a': 'Wait', 'robot_b': 'Pick up the stapler.'},
+  "2": {'robot_a': 'Wait', 'robot_b': 'Put the stapler into the box.'},
+  "3": {'robot_a': 'Wait', 'robot_b': 'Pick up the pen.'},
+  "4": {'robot_a': 'Wait', 'robot_b': 'Put the pen into the box.'},
+  "5": {'robot_a': 'Wait', 'robot_b': 'Wait'}
+}
+
+Rules:
+1. In each sub-task of your response, the robot should manipulate one object and only move its gripper once.
+2. If you think the instruction is low-level enough, just repeat the instruction in your response
+3. Omit assumptions and only follow a json format after the word Response:
+4. All items should be put inside the box.
+5. Mounted robot cannot move around but can place objects in the box.
+6. Robot_a is already holding the box.
+7. mounted robot_a is more efficient in gathering items from the table.
+8. robot_a needs to put down the box before it picks up other things.
+9. The apple should be left on the table.
+10. robot_a should be careful to differentiate between items that should be picked up and those that should be left.
+11. robot_a is a mounted robot and cannot move around.
+12. No objects need to be put into the box, and hence, robot_a doesn't need to open the box.
+
+Object state: table(mounted robot_b), box(on table), stapler(on table), pen(on table), apple(on table), robot_a(at table), robot_b(mounted on table)
+Robot Capacity: robot_a=['mobile base', 'gripper'], robot_b=['mounted base', 'gripper']
+{'1': {'robot_a': 'Wait', 'robot_b': 'Pick up the stapler.'}, '2': {'robot_a': 'Wait', 'robot_b': 'Put the stapler into the box.'}, '3': {'robot_a': 'Wait', 'robot_b': 'Pick up the pen.'}, '4': {'robot_a': 'Wait', 'robot_b': 'Put the pen into the box.'}, '5': {'robot_a': 'Wait', 'robot_b': 'Wait'}}
+robot_a is performing the task: wait.
+robot_a waiting for this task to complete...
+********************Success! "wait" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_a: Wait
+Task-related knowledge: wait_duration
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+save_information("wait_duration", None, 1)
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_b is performing the task: pick up the stapler.
+robot_a waiting for this task to complete...
+********************Success! "pick up the stapler" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_b: Pick up the stapler.
+Task-related knowledge: pick_pos, pick_ori, pickup_height
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+save_information("pick_pos", current_pos, 1)
+save_information("pick_ori", current_ori, 1)
+save_information("pickup_height", "default", 1)
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_a is performing the task: wait.
+robot_a waiting for this task to complete...
+********************Success! "wait" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_a: Wait
+Task-related knowledge: wait_duration
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+save_information("wait_duration", None, 1)
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_b is performing the task: put the stapler into the box.
+robot_a waiting for this task to complete...
+********************Success! "put the stapler into the box" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_b: Put the stapler into the box.
+Task-related knowledge: put_pos, put_ori, put_height
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+No stored information required as the task is already done.
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_a is performing the task: wait.
+robot_a waiting for this task to complete...
+********************Success! "wait" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_a: Wait
+Task-related knowledge: wait_duration
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+save_information("wait_duration", None, 1)
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_b is performing the task: pick up the pen.
+robot_a waiting for this task to complete...
+********************Success! "pick up the pen" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_b: Pick up the pen.
+Task-related knowledge: robot_b_pick_pos, robot_b_pick_ori, robot_b_pickup_height
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_a is performing the task: wait.
+robot_a waiting for this task to complete...
+********************Success! "wait" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_a: Wait
+Task-related knowledge: wait_duration
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+save_information("wait_duration", None, 1)
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_b is performing the task: put the pen into the box.
+robot_a waiting for this task to complete...
+********************Success! "put the pen into the box" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_b: Put the pen into the box.
+Task-related knowledge: put_pos, put_ori, drop_distance, pen_orientation, box_location
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_a is performing the task: wait.
+robot_a, robot_b waiting for this task to complete...
+current_codeline:move_gripper_to_pose(moveup_pos, current_ori)
+Please determine whether the given correction indicates there's an error beyond the task's scope.
+
+Task: open the top shelf
+Correction: move right a little bit
+Output: no
+
+Task: pick up the apple.
+Correction: that's wrong. move left please
+Output: no
+
+Task: put the apple into the fridge
+Correction: you should open the fridge first
+Output: yes
+
+Task: open the fridge
+Correction: wrong detection
+Output: no
+
+Task: pick up the pen
+Correction: no, pick the red pen
+Output: yes
+
+Task: robot_a: Wait
+Correction: Don't wait. Take the box away.
+Output: 
+yes
+**Error Type: Planning error
+{'1': {'robot_a': 'Wait', 'robot_b': 'Pick up the stapler.'}, '2': {'robot_a': 'Wait', 'robot_b': 'Put the stapler into the box.'}, '3': {'robot_a': 'Wait', 'robot_b': 'Pick up the pen.'}, '4': {'robot_a': 'Wait', 'robot_b': 'Put the pen into the box.'}, '5': {'robot_a': 'Pick up the box', 'robot_b': 'Wait'}, '6': {'robot_a': 'Take the box away', 'robot_b': 'Wait'}}
+The box with items needs to be removed from the table.
+Robot_a was inactive.
+{'1': {'robot_a': 'Pick up the box', 'robot_b': 'Wait'}, '2': {'robot_a': 'Take the box away', 'robot_b': 'Wait'}}
+File 'cache/history_tmp.pkl' has been deleted successfully.
+Imagine you are working with two robot equipped with a two-fingered gripper for grasping. The robots' mission is to collaborate and complete tasks based on a given instructions. However, they may struggle with high-level instructions
+Your role is to understand those instructions and break them down into smaller, actionable sub-tasks. You will also assign the tasks to specific robot and order the tasks. If there is ambiguity in deciding the object given existing information, just list all possible objects like Example 1.
+If one robot needs to wait for the other to finish a particular sub-task, assign them task "wait" at the same line. 
+Here are some examples:
+
+Object state: fridge(closed), green apple(on table), red apple(on table)
+Robot capacity: robot_a=['mobile base', 'gripper'], robot_b=['mobile base', 'gripper']
+Instruction: put the apple in the fridge.
+Response:
+{
+  "1": {"robot_a" : "Open the fridge.", "robot_b" : "Pick up apple_x." },
+  "2": {"robot_a" : "Wait", "robot_b" : "Put apple_x into the fridge.",},
+  "3": {"robot_a": "Close the fridge.", "robot_b" : "Wait",},
+}
+
+Object state: cabinet(closed)
+Robot capacity: robot_a=[], robot_b=[]
+Instruction: open the top white cabinet
+Response:
+{
+  "1": {"robot_a": "Open the cabinet.", "robot_b": "Wait"}
+}
+
+Object state: N/A
+Robot capacity: robot_a=['fixed base', 'gripper'], robot_b=['mobile base', 'gripper']
+Instruction: put the spoon into the bottom black shelf
+Response:
+{
+  "1": {"robot_a" : "Open the bottom black shelf.", "robot_b" : "Go to the spoon"},
+  "2": {"robot_a" : "Wait", "robot_b" : "Pick up the spoon." },
+  "3": {"robot_a" : "Wait", "robot_b": "Go to robot_a"},
+  "4": {"robot_a" : "Take spoon", "robot_b" : "Give spoon to robot_a"},
+  "5": {"robot_a" : "Put spoon into the bottom black shelf", "robot_b": "Wait"}
+  "6": {"robot_a" : "Close the bottom black shelf.", "robot_b" : "Wait"}
+}
+
+Instruction: clean up the table.
+Response:
+{
+  "1": {'robot_a': 'Wait', 'robot_b': 'Pick up the stapler.'},
+  "2": {'robot_a': 'Wait', 'robot_b': 'Put the stapler into the box.'},
+  "3": {'robot_a': 'Wait', 'robot_b': 'Pick up the pen.'},
+  "4": {'robot_a': 'Wait', 'robot_b': 'Put the pen into the box.'},
+  "5": {'robot_a': 'Wait', 'robot_b': 'Wait'}
+}
+
+Instruction: clean up the table.
+Response:
+{
+  "1": {'robot_a': 'Wait', 'robot_b': 'Pick up the stapler.'},
+  "2": {'robot_a': 'Wait', 'robot_b': 'Put the stapler into the box.'},
+  "3": {'robot_a': 'Wait', 'robot_b': 'Pick up the pen.'},
+  "4": {'robot_a': 'Wait', 'robot_b': 'Put the pen into the box.'},
+  "5": {'robot_a': 'Pick up the box', 'robot_b': 'Wait'},
+  "6": {'robot_a': 'Take the box away', 'robot_b': 'Wait'}
+}
+
+Rules:
+1. In each sub-task of your response, the robot should manipulate one object and only move its gripper once.
+2. If you think the instruction is low-level enough, just repeat the instruction in your response
+3. Omit assumptions and only follow a json format after the word Response:
+4. All items should be put inside the box.
+5. Mounted robot cannot move around but can place objects in the box.
+6. Robot_a is already holding the box.
+7. mounted robot_a is more efficient in gathering items from the table.
+8. robot_a needs to put down the box before it picks up other things.
+9. The apple should be left on the table.
+10. robot_a should be careful to differentiate between items that should be picked up and those that should be left.
+11. robot_a is a mounted robot and cannot move around.
+12. No objects need to be put into the box, and hence, robot_a doesn't need to open the box.
+13. The box with items needs to be removed from the table.
+14. Robot_a was inactive.
+
+Object state: table(mounted robot_b), box(on table, full), stapler(in box), pen(in box), robot_a(at table), robot_b(mounted on table)
+Robot Capacity: robot_a=['mobile base', 'gripper'], robot_b=['mounted base', 'gripper']
+{'1': {'robot_a': 'Pick up the box', 'robot_b': 'Wait'}, '2': {'robot_a': 'Take the box away', 'robot_b': 'Wait'}}
+robot_a is performing the task: pick up the box.
+robot_b waiting for this task to complete...
+********************Success! "pick up the box" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_a: Pick up the box
+Task-related knowledge: pick_pos, pick_ori, pickup_height
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+save_information("pick_pos", None, 1)
+save_information("pick_ori", None, 1)
+save_information("pickup_height", None, 1)
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_b is performing the task: wait.
+robot_b waiting for this task to complete...
+********************Success! "wait" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_b: Wait
+Task-related knowledge: wait_time, current_pos, current_ori.
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+save_information("wait_time", None, 1)
+save_information("current_pos", None, 1)
+save_information("current_ori", None, 1)
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_a is performing the task: take the box away.
+robot_b waiting for this task to complete...
+********************Success! "take the box away" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_a: Take the box away
+Task-related knowledge: robot_id, grasp_pos, grasp_ori, target_pos, target_ori.
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+robot_b is performing the task: wait.
+robot_b waiting for this task to complete...
+********************Success! "wait" is fulfilled !!!!!********************
+--------------------------------------------------------------------------------
+*at save_info*
+A robot is doing a task, and a human is giving it feedback to help it complete the task correctly. 
+Your first task is to use the command 'save_information(info_name, info_value, response_round: int)' to store the correct value of "task-related knowledge".
+Your second task is to determine whether there are additional waypoints needed. To do this, you need to distinguish between positional adjustments and waypoints based on analyzing human's feedback.
+
+Below are some examples:
+Interaction history:
+'''
+Task: Insert the pen to the holder, with the pen already in hand.
+# Task-related knowledge: insertion_pos, insertion_ori, insertion_depth
+
+Response 1:
+'''
+insert_pos, insert_ori = get_task_pose("insert the pen to the holder")
+move_gripper_to_pose(insert_pos, insert_ori)
+current_pos, current_ori = get_current_state()
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Interrupted at codeline "move_gripper_to_pose(insert_pos, insert_ori)".
+Human feedback: move forward a bit
+
+Response to feedback 2:
+'''
+current_pos, current_ori = get_current_state()
+target_pos = parse_pos(f"a point a bit backward to {current_pos}")
+move_gripper_to_pose(target_pos, current_ori)
+
+'''
+Outcome: Done.
+Human feedback: move left and tilt up a little bit
+
+Response to feedback 3:
+'''
+movedown_pos = parse_pos(f"a point 5cm to {current_pos}.")
+move_gripper_to_pose(movedown_pos, current_ori)
+open_gripper()
+'''
+Outcome: Done.
+Human feedback: Done.
+'''
+
+Your response:
+save_information("insertion_pos", current_pos, 4)
+save_information("insertion_ori", target_ori, 4)
+save_information("insertion_depth", "5cm", 5)
+Additional waypoint needed: None
+
+Interaction history:
+'''
+Task: robot_b: Wait
+Task-related knowledge: wait_time, current_pos, current_ori.
+
+Response 1:
+'''
+No code for dry-run
+'''
+Outcome: Done.
+Human feedback: Done
+'''
+
+Your response:
+
+save_information("wait_time", None, 1)
+save_information("current_pos", None, 1)
+save_information("current_ori", None, 1)
+Additional waypoint needed: None
+defaultdict(<class 'dict'>, {})
+--------------------------------------------------------------------------------
+File 'cache/tmp_info.pkl' not found.
+File 'cache/history_tmp.pkl' has been deleted successfully.
+---------------------------Ready to move to next instruction...---------------------------
+File 'cache/history_tmp.pkl' not found.
